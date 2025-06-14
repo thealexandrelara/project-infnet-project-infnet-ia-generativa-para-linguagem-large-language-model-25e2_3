@@ -1,0 +1,7 @@
+[project]
+name = "project-infnet-ia-generativa-para-linguagem-large-language-model-25e2-3"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
