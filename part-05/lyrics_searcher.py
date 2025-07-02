@@ -23,7 +23,7 @@ class LyricsSearcher:
         if song is None:
             return None
 
-        return song.lyrics.encode().decode()
+        return f"""{song.lyrics.encode().decode()}"""
 
 
 if __name__ == "__main__":

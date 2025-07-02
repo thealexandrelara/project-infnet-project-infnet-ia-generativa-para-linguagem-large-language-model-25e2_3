@@ -1,6 +1,6 @@
 import streamlit as st
 import time
-import json
+from json_parser import validate_and_convert_state
 
 from wedding_organizer_agent import WeddingOrganizerAgent
 
@@ -37,6 +37,11 @@ st.markdown("""
         font-weight: bold;
         margin: 2rem 0 1rem 0;
         text-align: center;
+    }
+    @media (prefers-color-scheme: dark) {
+        .section-header {
+            color: #FFFFFF;
+        }
     }
     .result-box {
         background: linear-gradient(135deg, #C8E6C9, #A5D6A7);
@@ -94,6 +99,7 @@ st.markdown("""
         background: linear-gradient(135deg, #C2185B, #E91E63);
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        color: white;
     }
     .stTextInput > div > div > input {
         border-radius: 10px;
@@ -107,45 +113,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-WEDDING_SONGS_DB = {
-    "taylor swift": {
-        "cornelia street": {
-            "suitable": True,
-            "reason": "Esta música tem um tom positivo e celebratório que funcionaria bem para uma atmosfera de casamento.",
-            "magic_factor": "Esta música tornará seu dia ainda mais mágico! ✨"
-        },
-        "love story": {
-            "suitable": True,
-            "reason": "Uma música romântica clássica perfeita para momentos especiais de casamento.",
-            "magic_factor": "Uma escolha atemporal que encantará todos os convidados! ✨"
-        },
-        "you belong with me": {
-            "suitable": True,
-            "reason": "Tem energia positiva e é sobre encontrar o amor verdadeiro, ideal para casamentos.",
-            "magic_factor": "Vai criar momentos inesquecíveis na sua celebração! ✨"
-        }
-    },
-    "ed sheeran": {
-        "perfect": {
-            "suitable": True,
-            "reason": "Uma das músicas de casamento mais populares, romântica e emotiva.",
-            "magic_factor": "Literalmente perfeita para o seu grande dia! ✨"
-        },
-        "thinking out loud": {
-            "suitable": True,
-            "reason": "Letra romântica sobre amor duradouro, ideal para casamentos.",
-            "magic_factor": "Tocará o coração de todos os presentes! ✨"
-        }
-    },
-    "john legend": {
-        "all of me": {
-            "suitable": True,
-            "reason": "Uma declaração de amor completa e incondicional, perfeita para casamentos.",
-            "magic_factor": "Uma música que expressa amor verdadeiro e eterno! ✨"
-        }
-    }
-}
 
 wedding_organizer_agent = WeddingOrganizerAgent()
 
@@ -195,7 +162,7 @@ with st.container():
                 st.session_state.song_result = {
                     'title': song_title,
                     'artist': artist_name,
-                    'evaluation': json.loads(result)
+                    'evaluation': validate_and_convert_state(result)
                 }
                 st.session_state.evaluation_done = True
                 st.rerun()
