@@ -52,6 +52,8 @@ Action: [The name of the tool to use]
 Action Input: [The song name and the artist]
 Observation: check if the lyrics are appropriate for a wedding.
 
+The action input must be formatted in JSON. Make sure to check if the JSON is valid.
+
 Example:
     Thought: I should get the lyrics for the song.
     Action: get_lyrics_tool
@@ -71,7 +73,8 @@ Make sure to:
     3.	Give your final recommendation: whether the song is appropriate or not for a wedding with the reasoning for your recommendation.
     4.  Respond:
         Thought: I have reviewed the lyrics. I should stop.
-        Final Answer: {{"appropriate": "true" | "false", "reason": "[Your reasoning MUST be in Portuguese]"}}
+        Final Answer: [RETURN A VALID JSON STRING - NOT JSON OBJECT. Format: {{"appropriate": "true" | "false", "reason": "[Your reasoning in Portuguese]"}}]
+    5.  CRITICAL: The final answer must be a properly escaped JSON STRING, not a JSON object.
 
 Begin with the current state:
 {input}
@@ -87,7 +90,7 @@ tools = [
 class WeddingOrganizerAgent:
 
     def __init__(self):
-        self.llm = OpenAI()
+        self.llm = OpenAI(model="gpt-4o-mini")
         prompt_template = PromptTemplate(
             input_variables=["input", "tools", "tool_names", "agent_scratchpad"],
             template=custom_prompt
