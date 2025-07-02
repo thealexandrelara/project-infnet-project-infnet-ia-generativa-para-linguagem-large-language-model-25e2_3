@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import json
 
 from wedding_organizer_agent import WeddingOrganizerAgent
 
@@ -153,7 +154,7 @@ def evaluate_song(song_title, artist_name):
     song = song_title.lower().strip()
     artist = artist_name.lower().strip()
 
-    return wedding_organizer_agent.run(artist, song)
+    return wedding_organizer_agent.evaluate_song(artist, song)
 
 if 'evaluation_done' not in st.session_state:
     st.session_state.evaluation_done = False
@@ -194,7 +195,7 @@ with st.container():
                 st.session_state.song_result = {
                     'title': song_title,
                     'artist': artist_name,
-                    'evaluation': result
+                    'evaluation': json.loads(result)
                 }
                 st.session_state.evaluation_done = True
                 st.rerun()
@@ -204,7 +205,7 @@ with st.container():
 if st.session_state.evaluation_done and st.session_state.song_result:
     result = st.session_state.song_result
     
-    if result['evaluation']['is_appropriate']:
+    if result['evaluation']['appropriate'] == 'true':
         st.markdown("""
         <div class="result-box">
             <div class="result-header">✅ Música ideal para o seu casamento!</div>
