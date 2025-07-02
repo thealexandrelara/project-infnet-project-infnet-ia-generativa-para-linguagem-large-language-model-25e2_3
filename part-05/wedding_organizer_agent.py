@@ -39,7 +39,7 @@ def get_lyrics_tool(state: dict | str) -> str:
     song_name = state.get("song_name")
     artist = state.get("artist")
     state["lyrics"] = get_lyrics(song_name, artist)
-    return json.dumps(state)
+    return json.dumps(state, ensure_ascii = False)
 
 @tool
 def check_lyrics(state: dict | str) -> str:
@@ -48,9 +48,9 @@ def check_lyrics(state: dict | str) -> str:
     """
     state = validate_and_convert_state(state)
     if state.get("lyrics"):
-        return "The lyrics are found. Final state reached"
+        return "The lyrics are found. I should review the lyrics and check if they are appropriate for a wedding."
     if not state.get("lyrics"):
-        return "The lyrics are not found. I should stop. Final state reached."
+        return "The lyrics are not found. I should stop."
 
 custom_prompt = """
 You are a professional wedding planner with a deep understanding of the etiquette, tone, and emotional atmosphere appropriate for weddings. Your task is to help clients decide whether a specific song is suitable to be played during a wedding ceremony or reception.
@@ -77,10 +77,6 @@ Once you have the lyrics for the song, you must carefully review the lyrics. You
 - Themes of violence, heartbreak, or infidelity
 - Negative, aggressive, or depressing tone
 - Lyrics that contradict the spirit of love, unity, or celebration
-
-If you don't find the lyrics, respond:
-    Thought: I should stop. Final state reached.
-    Final Answer: The lyrics are not found [suggest user to check the song name and artist].
 
 Make sure to:
     1.	Review the lyrics in detail. Highlight any problematic lines or phrases.
@@ -115,5 +111,5 @@ agent_executer = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_pa
 if __name__ == "__main__":
     artist = "Jorge e Mateus"
     song_name = "Amo Noite e Dia"
-    response = agent_executer.invoke({"input": json.dumps({"artist": artist, "song_name": song_name}), "agent_scratchpad": "", "tools": [tool.description for tool in tools], "tool_names": [tool.name for tool in tools]})
+    response = agent_executer.invoke({"input": json.dumps({"artist": artist, "song_name": song_name}), "agent_scratchpad": "", "tools": [tool.description for tool in tools], "tool_names": [tool.name for tool in tools]}, ensure_ascii = False)
     print(response)

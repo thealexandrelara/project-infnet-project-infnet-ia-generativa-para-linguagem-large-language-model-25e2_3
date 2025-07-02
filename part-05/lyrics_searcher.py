@@ -1,5 +1,4 @@
 import os
-import json
 from lyricsgenius import Genius
 from dotenv import load_dotenv
 
@@ -24,7 +23,7 @@ class LyricsSearcher:
         if song is None:
             return None
 
-        return json.dumps({"lyrics": song.lyrics, "song_name": song.title, "artist": song.artist})
+        return song.lyrics.encode().decode()
 
 
 if __name__ == "__main__":
